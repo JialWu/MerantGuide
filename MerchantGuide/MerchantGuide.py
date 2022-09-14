@@ -1,11 +1,11 @@
 import re
 
 from resources import Resource
-from utils import words_in_dic
+from utils import words_in_dict, words_to_roman
 
-def set_roman(input, dict):
-    word, roman_num = re.split("\sis\s", input)
-    dict[word] = roman_num
+def set_symbol(input, dict):
+    word, roman_sym = re.split("\sis\s", input)
+    dict[word] = roman_sym
     return dict
 def calculate_credits(input, word_dict):
     words_and_resource, credits = re.split("\sis\s", input)
@@ -17,11 +17,10 @@ def calculate_credits(input, word_dict):
     # find all words need to be converted to roman number
     words = words_and_resource.split()
     words.remove(resource)
-    # TODO: check if each word exists in the word_to_roman dictionary 
-    #       words_in_dict(words, word_dict)
-    
-    # TODO: convert the words to roman number 
-    #       words_to_roman(words, word_dict)
+    # check if each word exists in the word_to_roman dictionary 
+    if words_in_dict(words, word_dict):
+        # convert the words to roman numerals
+        roman_num = words_to_roman(words, word_dict)
     
     # TODO: check if the roman number is valid
     #       is_valid(roman_num)
@@ -37,7 +36,7 @@ def main():
             break
         else:
             switch = {
-                0: set_roman,
+                0: set_symbol,
                 1: calculate_credits
             }
             if re.search(".*is\s*(I|V|X|L|C|D|M)$", user_input): input_maching = 0
