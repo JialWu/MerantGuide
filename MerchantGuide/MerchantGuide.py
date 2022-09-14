@@ -1,33 +1,9 @@
+from lib2to3.pytree import convert
 import re
 
-from resources import Resource
-from utils import words_in_dict, words_to_roman
-
-def set_symbol(input, dict):
-    word, roman_sym = re.split("\sis\s", input)
-    dict[word] = roman_sym
-    return dict
-def calculate_credits(input, word_dict):
-    words_and_resource, credits = re.split("\sis\s", input)
-    # find the resource and its credits
-    [resource] = re.findall("[A-Z]\w*", words_and_resource)
-    [credits] = re.findall("\d+", credits)
-    new_Resource = Resource(resource, int(credits))
-    print(new_Resource.name, new_Resource.credits)
-    # find all words need to be converted to roman number
-    words = words_and_resource.split()
-    words.remove(resource)
-    # check if each word exists in the word_to_roman dictionary 
-    if words_in_dict(words, word_dict):
-        # convert the words to roman numerals
-        roman_num = words_to_roman(words, word_dict)
+from utils import set_symbol, get_credits
     
-    # TODO: check if the roman number is valid
-    #       is_valid(roman_num)
-    return words, new_Resource
 def main():
-    # data = sys.stdin.read()
-    # print(data)
     user_input = []
     word_to_roman = {}
     while True:
@@ -37,7 +13,9 @@ def main():
         else:
             switch = {
                 0: set_symbol,
-                1: calculate_credits
+                1: get_credits,
+                #2: convert_to_credits,
+                #3: calculate_credits 
             }
             if re.search(".*is\s*(I|V|X|L|C|D|M)$", user_input): input_maching = 0
             elif re.search("(.*)\s*[A-Z](.*)\s*(is)\s*(\d+)\s*(Credits)", user_input): input_maching = 1
@@ -48,6 +26,9 @@ def main():
             if input_maching in switch.keys():
                 output = switch[input_maching](user_input, word_to_roman)
                 print(input_maching, output)
+            
+            # check validation
+            # if re.search("(I|V|X|L|C|D|M)*", user_input): print(is_valid(user_input))
 
 if __name__=="__main__":
     main()
