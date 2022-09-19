@@ -4,9 +4,13 @@ def words_in_dict(words, word_dict):
     if all(key in word_dict for key in words):
         return True
     else: 
-        print("I have no idea what are you talking about")
-        print(word_dict, words)
         return False
+
+def resource_in_list(resource, resource_dic):
+    for res in resource_dic.get_resource():
+        if res.name == resource:
+            return True
+    return False
     
 def words_to_roman(words, word_dict):
     roman_str = ""
@@ -53,5 +57,5 @@ def roman_to_credits(roman_num):
                 credits -= sym_value.get(roman_num[i])
             else: 
                 return False
-        print(max_sym, sym_value.get(max_sym), num_small_sym)
+        # print(max_sym, sym_value.get(max_sym), num_small_sym)
     return credits
