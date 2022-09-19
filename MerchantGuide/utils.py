@@ -5,6 +5,7 @@ def words_in_dict(words, word_dict):
         return True
     else: 
         print("I have no idea what are you talking about")
+        print(word_dict, words)
         return False
     
 def words_to_roman(words, word_dict):
@@ -13,7 +14,7 @@ def words_to_roman(words, word_dict):
         roman_str += word_dict.get(word)
     return roman_str
 
-def is_valid(roman_num):
+def roman_to_credits(roman_num):
     sub_rule = {
         "I": ["V", "X"],
         "X": ["L", "C"],
@@ -37,20 +38,20 @@ def is_valid(roman_num):
     max_sym = roman_num[0]
     num_small_sym = 0
     credits = 0
-    for i in range(len(roman_num) - 1):
+    for i in range(len(roman_num)):
         if sym_value.get(roman_num[i]) >= sym_value.get(max_sym):
             # it is valid if the latter one is larger than or equall to the current
             # update the maximum number, number of small value and credits
-            max_sym = roman_num[i + 1]
+            max_sym = roman_num[i]
             num_small_sym = 0
             credits += sym_value.get(roman_num[i])
         else:
             num_small_sym += 1
             if num_small_sym > 1: return False
             # if it is smaller, the validation of minuend needs to be check
-            if any(max_sym in sym for sym in sub_rule.get(roman_num[i + 1])): 
+            if any(max_sym in sym for sym in sub_rule.get(roman_num[i])): 
                 credits -= sym_value.get(roman_num[i])
             else: 
                 return False
         print(max_sym, sym_value.get(max_sym), num_small_sym)
-    return True, credits
+    return credits
