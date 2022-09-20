@@ -19,4 +19,4 @@ Start the project with the following command:
 ```
 python3 -m MerchantGuide.merchantGuide
 ```
-Then, input the basic conversion rules and ask questions, all the answers will be printed out if the information provided is valid and adequate.
+Then, input the basic conversion rules and ask questions, all the answers will be printed out if the information provided is valid and adequate. To quit this guide project, please input ```quit```.
