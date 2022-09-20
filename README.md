@@ -8,7 +8,7 @@ Run all tests with the command:
 ```
 python3 -m unittest discover tests "*_test.py"
 ```
-or run only one test with: 
+or run only one specific test with: 
 ```
 python3 -m unittest tests.test_module_name
 ``` 
