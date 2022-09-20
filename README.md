@@ -15,7 +15,7 @@ python3 -m unittest tests.test_module_name
 The ```test_module_name``` could be ```input_matching_test```, ```utils_test``` and ```merchantGuide_test```
 
 # Start the project
-Start the project with the command: \
+Start the project with the following command: 
 ```
 python3 -m MerchantGuide.merchantGuide
 ```
