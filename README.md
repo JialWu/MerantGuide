@@ -3,11 +3,12 @@ This project is a merchant's guide to the galaxy for selling common metals and d
 
 # Test
 Tested with ```python 3.9.13```
+
 Run all tests with the command: 
 ```
 python3 -m unittest discover tests "*_test.py"
 ```
-or only run one test with: 
+or run only one test with: 
 ```
 python3 -m unittest tests.test_module_name
 ``` 
