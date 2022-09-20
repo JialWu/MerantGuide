@@ -2,7 +2,7 @@ import unittest
 
 import MerchantGuide.merchantGuide as merchantGuide
 
-class TestMain(unittest.TestCase):
+class TestMerchantGuide(unittest.TestCase):
     def test_main(self):
         test_input = ["glob is I",
                       "prok is V",
