@@ -5,12 +5,6 @@ def words_in_dict(words, word_dict):
         return True
     else: 
         return False
-
-def resource_in_list(resource, resource_dic):
-    for res in resource_dic.get_resource():
-        if res.name == resource:
-            return True
-    return False
     
 def words_to_roman(words, word_dict):
     roman_str = ""
@@ -34,9 +28,9 @@ def roman_to_credits(roman_num):
         "M": 1000
     }
     # I ,X, C, M cannot repeat more than 3 times in succession
-    if re.search("I{4}|X{4}|C{4}|M{4}", roman_num): return False
+    if re.search("I{4}|X{4}|C{4}|M{4}", roman_num): raise  Exception("Error in Roman numerals: I, X, C, M can only be repeated three times in succession.")
     # V, L, D never repeat
-    if re.search("(.*V.*V)|(.*L.*L)|(.*D.*D)", roman_num): return False
+    if re.search("(.*V.*V)|(.*L.*L)|(.*D.*D)", roman_num): raise  Exception("Error in Roman numerals: V, L, D can never be repeated.")
     # view the roman number in reverse order for better understand
     roman_num = roman_num[::-1]
     max_sym = roman_num[0]
@@ -51,11 +45,11 @@ def roman_to_credits(roman_num):
             credits += sym_value.get(roman_num[i])
         else:
             num_small_sym += 1
-            if num_small_sym > 1: return False
+            if num_small_sym > 1: raise  Exception("Error in Roman numerals: Only one small-value symbol may be substracted.")
             # if it is smaller, the validation of minuend needs to be check
             if any(max_sym in sym for sym in sub_rule.get(roman_num[i])): 
                 credits -= sym_value.get(roman_num[i])
             else: 
-                return False
+                raise  Exception("Error in Roman numerals: Didn't follow the substraction's rule.")
         # print(max_sym, sym_value.get(max_sym), num_small_sym)
     return credits

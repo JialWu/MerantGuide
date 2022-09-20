@@ -1,28 +1,23 @@
 import unittest
 
-import sys
-from contextlib import contextmanager
-from io import StringIO
+from MerchantGuide.input_matching import set_symbol, convert_to_credits, get_credits, calculate_credits
+from MerchantGuide.resources import Resource_List
 
-from MerchantGuide import input_matching
-from MerchantGuide.resources import Resource_List, Resource
-
-@contextmanager
-def captured_output():
-    new_out, new_err = StringIO(), StringIO()
-    old_out, old_err = sys.stdout, sys.stderr
-    try:
-        sys.stdout, sys.stderr = new_out, new_err
-        yield sys.stdout, sys.stderr
-    finally:
-        sys.stdout, sys.stderr = old_out, old_err
-
-class TestInput(unittest.TestCase):
+class TestInputMatching(unittest.TestCase):
     def test_set_symbol(self):
+        word_to_roman = {}
+        
+        input = "glob is X"
+        set_symbol(input, word_to_roman, None)
+        self.assertEqual(word_to_roman, {"glob": "X"})
+        
         input = "glob is I"
-        dict = {}
-        input_matching.set_symbol(input, dict, None)
-        self.assertEqual(dict, {"glob": "I"})
+        set_symbol(input, word_to_roman, None)
+        self.assertEqual(word_to_roman, {"glob": "I"})
+        
+        input = "dekn is V"
+        set_symbol(input, word_to_roman, None)
+        self.assertEqual(word_to_roman, {"glob": "I", "dekn": "V"})
         
     def test_get_credits(self):
         word_to_roman = {
@@ -33,11 +28,18 @@ class TestInput(unittest.TestCase):
         }
         resource_list = Resource_List()
         input = "glob glob Silver is 34 Credits"
-        input_matching.get_credits(input, word_to_roman, resource_list)
-
-        for resource in resource_list.get_resource():
-            self.assertEqual(resource.name, "Silver")
-            self.assertEqual(resource.credits, 17)
+        get_credits(input, word_to_roman, resource_list)
+        self.assertEqual(resource_list.resource_in_list("Silver"), True)
+        self.assertEqual(resource_list.get_credits("Silver"), 17)
+        
+        input = "glob glob Silver is 56 Credits"
+        get_credits(input, word_to_roman, resource_list)
+        self.assertEqual(resource_list.resource_in_list("Silver"), True)
+        self.assertEqual(resource_list.get_credits("Silver"), 28)
+        
+        input = "glos glob Silver is 56 Credits"
+        with self.assertRaises(Exception):
+            get_credits(input, word_to_roman, resource_list)
             
     def test_convert_to_credits(self):
         word_to_roman = {
@@ -47,10 +49,23 @@ class TestInput(unittest.TestCase):
             "tegj": "L"
         }
         input = "how much is pish tegj glob glob ?"
-        with captured_output() as (out, err):
-            input_matching.convert_to_credits(input, word_to_roman, resource_list=None)
-        output = out.getvalue().strip()
-        self.assertEqual(output, 'pish tegj glob glob is 42')
+        self.assertEqual(convert_to_credits(input, word_to_roman, resource_list=None), ("pish tegj glob glob", 42))
+        
+        input = "how much is qish ?"
+        with self.assertRaises(Exception):
+            convert_to_credits(input, word_to_roman, resource_list=None)
+            
+        input = "how much is prok glob glob glob glob?"
+        with self.assertRaises(Exception):
+            convert_to_credits(input, word_to_roman, resource_list=None)
+            
+        input = "how much is prok pish prok?"
+        with self.assertRaises(Exception):
+            convert_to_credits(input, word_to_roman, resource_list=None)
+        
+        input = "how much is glob tegj?"
+        with self.assertRaises(Exception):
+            convert_to_credits(input, word_to_roman, resource_list=None)
         
     def test_calculate_credits(self):
         word_to_roman = {
@@ -60,12 +75,18 @@ class TestInput(unittest.TestCase):
             "tegj": "L"
         }
         resource_list = Resource_List()
-        resource_list.add_resource(Resource("Silver", 17))
+        resource_list.add_resource("Silver", 17)
         input = "how many Credits is glob prok Silver ?"
-        with captured_output() as (out, err):
-            input_matching.calculate_credits(input, word_to_roman, resource_list)
-        output = out.getvalue().strip()
-        self.assertEqual(output, 'glob prok Silver is 68 Credits')
+        self.assertEqual(calculate_credits(input, word_to_roman, resource_list), ("glob prok Silver", 68))
+        
+        input = "how many Credits is glof prok Silver ?"
+        with self.assertRaises(Exception):
+            calculate_credits(input, word_to_roman, resource_list)
+            
+        input = "how many Credits is glob prok Copper ?"
+        with self.assertRaises(Exception):
+            calculate_credits(input, word_to_roman, resource_list)
+            
         
 if __name__ == '__main__':
     unittest.main()

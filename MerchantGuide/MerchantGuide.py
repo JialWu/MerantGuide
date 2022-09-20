@@ -1,8 +1,7 @@
 import re
 
-from .input_matching import set_symbol, get_credits, convert_to_credits, calculate_credits
-from .error_handler import invalid_queries
-from .resources import Resource_List
+from MerchantGuide.input_matching import set_symbol, get_credits, convert_to_credits, calculate_credits
+from MerchantGuide.resources import Resource_List
     
 def main():
     user_input = []
@@ -11,7 +10,7 @@ def main():
     
     while True:
         user_input = input()
-        if user_input == "":
+        if user_input == "quit":
             break
         else:
             switch = {
@@ -29,14 +28,18 @@ def main():
             
             # invalid input queries handlings
             try:
-                switch[input_maching](user_input, word_to_roman, resource_list)
-            except:
-                invalid_queries()
-            else:
-                print(word_to_roman)
-                for resource in resource_list.get_resource():
-                    print(resource)
-                # print(resource_list.get_resource())
+                if input_maching == 2:
+                    words, credicts = switch[input_maching](user_input, word_to_roman, resource_list)
+                    print(words + " is " + str(credicts))
+                elif input_maching == 3:
+                    words_and_resource, result = switch[input_maching](user_input, word_to_roman, resource_list)
+                    print(words_and_resource + " is " + str(result) + " Credits")
+                else:
+                    switch[input_maching](user_input, word_to_roman, resource_list)
+            except KeyError:
+                print("I have no idea what are you talking about")
+            except Exception as e:
+                print(e)
             
             # check validation
             # if re.search("(I|V|X|L|C|D|M)*", user_input): print(is_valid(user_input))
