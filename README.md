@@ -1,4 +1,4 @@
-# MerantGuide
+# MerchantGuide
 This project is a merchant's guide to the galaxy for selling common metals and dirt. It is used to help merchant convert intergalactic units and roman numerals.
 
 # Test
